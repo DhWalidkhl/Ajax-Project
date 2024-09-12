@@ -106,7 +106,12 @@
               >
               <input type="text" class="form-control" id="productTotal" />
             </div>
-            <button type="submit" class="btn btn-success px-3" id="submitBtn" disabled>
+            <button
+              onclick="updateProduct()"
+              type="submit"
+              class="btn btn-success px-3"
+              id="submitBtn"
+            >
               Update Now
             </button>
             <div class="spinner-grow d-none" id="loader" role="status">
@@ -121,8 +126,8 @@
     <script>
       fillData();
       async function fillData() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get("id");
+        let urlParams = new URLSearchParams(window.location.search);
+        let id = urlParams.get("id");
         const URL = `http://164.68.107.70:6060/api/v1/ReadProductByID/${id}`;
         document.getElementById("loading-section").classList.remove("d-none");
         document.getElementById("product-section").classList.add("d-none");
@@ -140,6 +145,53 @@
           document.getElementById("product-img").src = item.Img;
         } else {
           alert("Something Went Wrong!");
+        }
+      }
+
+      async function updateProduct() {
+        let urlParams = new URLSearchParams(window.location.search);
+        let id = urlParams.get("id");
+        const productName = document.getElementById("productName").value;
+        const productCode = document.getElementById("productCode").value;
+        const productImage = document.getElementById("productImage").value;
+        const unitPrice = document.getElementById("unitPrice").value;
+        const productQty = document.getElementById("productQty").value;
+        const productTotal = document.getElementById("productTotal").value;
+
+        if (
+          productName === "" ||
+          productCode === "" ||
+          productImage === "" ||
+          unitPrice === "" ||
+          productQty === "" ||
+          productTotal === ""
+        ) {
+          alert("Please Fill Up All Required field");
+        } else {
+          const URL = `http://164.68.107.70:6060/api/v1/UpdateProduct/${id}`;
+
+          document.getElementById("loader").classList.remove("d-none");
+          document.getElementById("submitBtn").classList.add("d-none");
+
+          const productObj = {
+            Img: productImage,
+            ProductCode: productCode,
+            ProductName: productName,
+            Qty: productQty,
+            TotalPrice: productTotal,
+            UnitPrice: unitPrice,
+          };
+
+          const res = await axios.post(URL, productObj);
+
+          document.getElementById("loader").classList.add("d-none");
+          document.getElementById("submitBtn").classList.remove("d-none");
+
+          if (res.status === 200) {
+            window.location = "index.html";
+          } else {
+            alert("Something Went Wrong");
+          }
         }
       }
     </script>
