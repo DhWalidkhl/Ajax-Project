@@ -3,7 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <title>Home</title>
     <link
       rel="shortcut icon"
@@ -50,7 +49,9 @@
     </nav>
     <main class="container py-5">
       <div>
-        <h1 class="text-center mb-5" id="heading-text">Total Products : <span id="product-count"></span> </h1>
+        <h1 class="text-center mb-5" id="heading-text">
+          Total Products : <span id="product-count"></span>
+        </h1>
       </div>
 
       <div class="row" id="loader">
@@ -134,24 +135,32 @@
       <div class="row" id="productList"></div>
     </main>
 
-    <script src="./js/axios.min.js"></script>
+    <!-- <script src="./js/axios.min.js"></script> -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js"></script>
+    <script></script>
     <script>
-      
-        async function getProduct() {
-          const URL = `http://164.68.107.70:6060/api/v1/ReadProduct`;
-          let res = await axios.get(URL);
+      async function getProduct() {
+        const URL = `http://164.68.107.70:6060/api/v1/ReadProduct`;
+        let res = await axios.get(URL);
+        console.log(res);
 
-          if (res.status === 200) {
-            const allProducts = res.data.data;
-            document.getElementById("product-count").innerText = allProducts.length
-            document.getElementById("loader").classList.add("d-none");
-            if (allProducts.length === 0) {
-              document.getElementById("heading-text").classList.add("d-none");
-              document.getElementById("productList").innerHTML =
-                "<h1 style='height: 100vh; display: flex; align-items: center; justify-content: center;'>There is no Product in Database night Now. <span class='ms-5'><a class='btn btn-success' href='/create.html'>Add Product</a></span></h1> <div></div>";
-            } else {
-              allProducts.forEach((product) => {
-                document.getElementById("productList").innerHTML += `
+        if (res.status === 200) {
+          const allProducts = res.data.data;
+          document.getElementById("product-count").innerText =
+            allProducts.length;
+          document.getElementById("loader").classList.add("d-none");
+          if (allProducts.length === 0) {
+            document.getElementById("heading-text").classList.add("d-none");
+            document.getElementById("productList").innerHTML =
+              "<h1 style='height: 100vh; display: flex; align-items: center; justify-content: center;'>There is no Product in Database night Now. <span class='ms-5'><a class='btn btn-success' href='/create.html'>Add Product</a></span></h1> <div></div>";
+          } else {
+            allProducts.forEach((product) => {
+              document.getElementById("productList").innerHTML += `
                 
             <div class="col-md-4 mb-4">
             <div class="card card-box">
@@ -169,19 +178,12 @@
             </div>
           </div>
                 `;
-              });
-            }
-          } else {
-            alert("Something Went Wrong!!!");
+            });
           }
+        } else {
+          alert("Something Went Wrong!!!");
         }
-
-        getProduct();
-      
-
-
-
-
+      }
 
       async function deleteProduct(id) {
         const URL = `http://164.68.107.70:6060/api/v1/DeleteProduct/${id}`;
@@ -191,19 +193,15 @@
           document.getElementById("loader").classList.remove("d-none");
           getProduct();
         } else {
-            alert("Something Went Wrong!!")
+          alert("Something Went Wrong!!");
         }
       }
 
-
       async function updateProduct(id) {
-        window.location = `/update.html?id=${id}`
+        window.location = `/update.html?id=${id}`;
       }
+
+      getProduct();
     </script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-      crossorigin="anonymous"
-    ></script>
   </body>
 </html>
